@@ -19,4 +19,20 @@ ZONE-TRANSFER
 dig @IP domain.com -t AXFR +nocookie
 host -t axfr domain.com DNS-IP
 
+SCANNING
+nmap -PE -sn -n targetIP -oX /root/Documents/discovery/discoveryscan.xml // ICMP echo request scan without port scan and save results into an XML file
+
+nmap -sU targetIP // UDP Scan
+
+nmap -sS -iL /root/Documents/discovery/discoveryscan.xml // TCP port scan of targets in the xml file
+
+nmap -sS --source-port portNumber -p portNumber targetIP
+
+nmap -O -v -n targetIP --osscan-guess // OS fingerprinting
+
+nmap -sV targetIP // Service detection
+
+nmap -O -v -n targetIP // finding a zombie -- result must be: IP ID Sequence Generation: Incremental for a good zombie
+
+nmap -Pn -sI zombieIP:openport targetIP -v
 
