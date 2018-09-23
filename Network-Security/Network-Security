@@ -1,0 +1,22 @@
+NETWORK-SECURITY
+
+INFORMATION GATHERING
+
+HOST DISCOVERY
+
+nmap -sn ip    (ping sweep)
+nmap -n -sn -PS22,135,443,445   (no ping)
+
+nmap -sS -sU -p53 IP	(DNS Discovery)
+
+DNS
+nslookup
+server IP (DNS)
+set q=NS/MX/A    NS=NameServer/MX=Mail/A=Finding records/hosts
+domain.com
+
+ZONE-TRANSFER
+dig @IP domain.com -t AXFR +nocookie
+host -t axfr domain.com DNS-IP
+
+
