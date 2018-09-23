@@ -24,7 +24,7 @@ nmap -PE -sn -n targetIP -oX /root/Documents/discovery/discoveryscan.xml // ICMP
 
 nmap -sU targetIP // UDP Scan
 
-nmap -sS -iL /root/Documents/discovery/discoveryscan.xml // TCP port scan of targets in the xml file
+nmap -sS -iL /root/Documents/discovery/discoveryscan.txt // TCP port scan of targets in the txt file
 
 nmap -sS --source-port portNumber -p portNumber targetIP
 
