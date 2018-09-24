@@ -73,4 +73,4 @@ net use \\IP\IPC$ "" /u:"" // test for anonymous NULL session
 SNMP 
 snmpwalk -v 2c targetIP -c public // snmp enumeration
 nmap -sU -p 161 --script=snmp-win32-services targetIP // snmp enumeration
-nmap -sU -p 161 targetIP --script snmp-brute // find community string
+nmap -sU -p 161 targetIP --script snmp-brute // brute force snmp
