@@ -1,6 +1,12 @@
 NETWORK-SECURITY
 
-INFORMATION GATHERING
+
+
+
+#### INFORMATION GATHERING ####
+
+
+
 
 HOST DISCOVERY
 
@@ -36,3 +42,35 @@ nmap -O -v -n targetIP // finding a zombie -- result must be: IP ID Sequence Gen
 
 nmap -Pn -sI zombieIP:openport targetIP -v
 
+
+
+
+#### ENUMERATION ####
+
+
+
+
+Netbios
+nbstat -A // gaterhing netbios information, execute this command directly on Windows systems
+
+net view IP // execute this command directly on Windows systems to list all shares
+
+net use K: \\IP\sharename // add K drive to mapped source
+
+nbtscan -v targetIP // gather Netbios information
+
+smbclient -L targetIP // list all shares
+
+enum4linux targetIP // gather information about smb
+
+rpcclient -N -U "" targetIP // execute rrmote RPC without asking for password en set the network username
+
+mount.cifs //targetIP/share /media/K_share/ user=,pass= // mount drive K on linux
+
+Null Session
+net use \\IP\IPC$ "" /u:"" // test for anonymous NULL session
+
+SNMP 
+snmpwalk -v 2c targetIP -c public // snmp enumeration
+nmap -sU -p 161 --script=snmp-win32-services targetIP // snmp enumeration
+nmap -sU -p 161 targetIP --script snmp-brute // find community string
