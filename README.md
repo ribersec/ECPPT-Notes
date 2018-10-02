@@ -2,10 +2,10 @@
 
 These are the notes that i have been created during my ECPPT course.
 
-TABLE OF CONTENTS
+Table of contents
 
-1 NETWORK-SECURITY
+1 Network-Security
 
-2 WEBAPP-SECURITY
+2 WebApp-Security
 
-3 SYSTEM-SECURITY
+3 System-Security
