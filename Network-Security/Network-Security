@@ -145,4 +145,29 @@ service --status-all // list all services
 ps // list processes
 cat /etc/passwd // list users
 
+PIVOTING
+
+(from meterpreter)
+run arp_scanner -r subnetIP //finding hosts
+
+(from metasploit)
+use post/multi/gather/ping_sweep // finding hosts
+
+(from meterpreter)
+route add subnet / mask / session id // adding new route for routing traffice throug the meterpreter session
+run autoroute -s subnet/mask // adding new route for routing traffice throug the meterpreter session
+
+(from meterpreter)
+use auxialiary/scanner/portscan/tcp // running portscan
+
+(from metasploit) use proxychains
+use auxiliary/server/socks4a // start a socks4a proxyserver
+
+/etc/proxychain.conf
+
+proxychains nmap -sT -Pn -n targetIP --top-ports 50 // port scan
+proxychains ssh user@targetIP // setting up ssh connection using proxychains
+proxychains telnet targetIP // setting up telnet connection using proxychains
+proxychains firefox // start a web browser through pivot for accessing website in new network
+
 
