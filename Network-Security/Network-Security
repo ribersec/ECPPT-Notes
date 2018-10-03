@@ -165,9 +165,9 @@ msf> use auxiliary/server/socks4a // start a socks4a proxyserver
 
 /etc/proxychain.conf
 
-proxychains nmap -sT -Pn -n targetIP --top-ports 50 // port scan
-proxychains ssh user@targetIP // setting up ssh connection using proxychains
-proxychains telnet targetIP // setting up telnet connection using proxychains
+proxychains4 nmap -sT -Pn -n targetIP --top-ports 50 // port scan
+proxychains4 ssh user@targetIP // setting up ssh connection using proxychains
+proxychains4 telnet targetIP // setting up telnet connection using proxychains
 
 meterpreter> portfwd add -l 8001 -p 80 -r targetIP
 meterpreter> portfwd add -l 3333 -p 3389 -r targetIP
