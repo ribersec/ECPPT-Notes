@@ -1,1 +1,10 @@
+
 WEB-SECURITY
+
+DOM
+<img src='bla' onerror="alert('XSS');" />
+
+Persistent
+<script>alert('XSS')</script>
+
+Reflected
